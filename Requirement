@@ -1,0 +1,13 @@
+1) Download Node Module
+https://nodejs.org/en/download/
+
+2) Install Node In The Project
+npm init
+
+3) Install Express
+
+npm install express
+
+4) Install Socket.io
+
+npm install socket.io
