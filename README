@@ -11,3 +11,7 @@ npm install express
 4) Install Socket.io
 
 npm install socket.io
+
+5) Run the project
+
+enter `node [name-of-js-file]`
