@@ -19,7 +19,9 @@ io.on('connection', (socket) => {
     });
 });
 
-
+app.get('/admin', (req, res) => {
+    res.sendFile(`${__dirname}/public/admin.html`)
+})
 
 
 server.listen(5000, () => {
