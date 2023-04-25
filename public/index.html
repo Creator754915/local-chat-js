@@ -3,17 +3,128 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/public/index.css">
-        <title>CHAT</title>
+            <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+            integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+            crossorigin="anonymous"
+        />
+        <title>ONLINE CHAT</title>
     </head>
     <body>
-        <div id="messages"></div>
-        <form action="">
-            <input id="msg" autocomplete="off" /><button>Send</button>
-        </form>
+        <style>
+            body {
+                font:12px arial;
+                color: #222;
+                text-align:center;
+                padding:35px; 
+            }
+            
+            form, p, span {
+                margin:0;
+                padding:0; 
+            }
+            
+            input { 
+                font:12px arial; 
+            }
+            
+            a {
+                color:#0000FF;
+                text-decoration:none; 
+            }
+            
+            a:hover { 
+                text-decoration:underline; 
+            }
+            
+            #wrapper, #loginform {
+                margin:0 auto;
+                padding-bottom:25px;
+                background:#EBF4FB;
+                width:504px;
+                border:1px solid #ACD8F0; 
+            }
+            
+            #loginform { 
+                padding-top:18px; 
+            }
+            
+            #loginform p { 
+                margin: 5px; 
+            }
+            
+            #chatbox {
+                text-align:left;
+                margin:0 auto;
+                margin-bottom:25px;
+                padding:10px;
+                background:#fff;
+                height:270px;
+                width:430px;
+                border:1px solid #ACD8F0;
+                overflow:auto; }
+            
+            #usermsg {
+                width:395px;
+                border:1px solid #ACD8F0; 
+            }
+            
+            #submit { 
+                width: 60px; 
+            }
+            
+            .error { 
+                color: #ff0000; 
+            }
+            
+            #menu { 
+                padding:12.5px 25px 12.5px 25px; 
+            }
+            
+            .welcome { 
+                float:left; 
+            }
+            
+            .logout { 
+                float:right; 
+            }
+  
+        </style>
+        <div id="wrapper">
+            <div id="menu">
+                  <p class="welcome">Welcome, <b></b></p>
+                  <p class="logout"><a id="exit" onclick="close_window()">Exit Chat</a></p>
+                  <div style="clear:both"></div>
+              </div>
+               
+              <div id="chatbox"></div>
+               
+              <form id="chat-form" action="">
+                  <input name="usermsg" type="text" id="usermsg" size="63" placeholder="Enter Message" autocomplete="off" required/>
+                  <input name="submitmsg" type="submit"  id="submitmsg" value="Send" />
+              </form>
+          </div>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.2/qs.min.js"
+            integrity="sha256-TDxXjkAUay70ae/QJBEpGKkpVslXaHHayklIVglFRT4="
+            crossorigin="anonymous"
+        ></script>
         <script src="/socket.io/socket.io.js"></script>
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
         <script>
+            user_name = prompt("Nom d'utilisateur")
+            let data=window.performance.getEntriesByType("navigation")[0].type;
+            document.cookie = "username=" + user_name;
+
+            if (data == "reload") {
+                $("#chatbox").append($("<p>").text(sessionStorage.getItem("7djg8f1hx264")))
+            }
+
+            if(user_name === null || user_name === "") {
+                user_name = "User" + Math.round(Math.random() * 1000);
+            }
+
             $(function (){
 
                 var socket = io();
@@ -21,16 +132,27 @@
                 $("form").submit(function (e) {
                     e.preventDefault();
 
-                    socket.emit("chat message", $("#msg").val());
-                    $("#msg").val("");
+                    socket.emit("chat message", $("#usermsg").val());
+                    $("#usermsg").val("");
                     return false;
                 });
-
+                
                 socket.on('chat message', function (msg) {
-                    $('#messages').append($("<p>").text(msg));
+                        $('#chatbox').append($("<p>").text('[' + user_name + ']\n' + msg));
+                        sessionStorage.setItem("7djg8f1hx264", '[' + user_name + ']' + msg)
+                });
+                socket.on('')
+                socket.on("noArg", () => {
+                    $("#chatbox").append($("<p>").text('[SERVER] \n ERROR PLEASE RETRY'));
                 });
 
             });
+
+            function close_window() {
+                if (confirm("Close Window?")) {
+                    close();
+                }
+            }
         </script>
     </body>
 </html>
